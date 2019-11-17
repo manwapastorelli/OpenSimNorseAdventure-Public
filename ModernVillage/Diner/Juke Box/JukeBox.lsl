@@ -1,5 +1,4 @@
-Everything Created by Sara Payne is covered by the 
-
+/*
 BSD 3-Clause License
 Copyright (c) 2019, Sara Payne (Manwa Pastorelli in virtual worlds)
 All rights reserved.
@@ -23,5 +22,21 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
-There are three scripts not written by Sara Payne, covered by the licences shown in the individual scripts. 
+default
+{
+    touch_start(integer num_detected)
+    {   //when touched do this
+        llSetTimerEvent(10);//starts a 10s timer (lenth of music)
+        llSay(PUBLIC_CHANNEL, "The sound of music starts to fill the diner");//say in chat incase people have speakers off
+        llPlaySound("Time Is On My Side", 1);//play the sound
+    }
+
+    timer()
+    {
+        integer comsChannel =  -111111;
+        llRegionSay(comsChannel, "RecordDrop"); //send instructions to records to drop
+        llResetScript();//reset the script
+    }
+}

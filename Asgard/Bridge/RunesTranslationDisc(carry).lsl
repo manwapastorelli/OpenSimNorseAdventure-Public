@@ -1,5 +1,4 @@
-Everything Created by Sara Payne is covered by the 
-
+/*
 BSD 3-Clause License
 Copyright (c) 2019, Sara Payne (Manwa Pastorelli in virtual worlds)
 All rights reserved.
@@ -23,5 +22,54 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
-There are three scripts not written by Sara Payne, covered by the licences shown in the individual scripts. 
+integer sensorCount;
+
+CheckRange()
+{
+    string name = "Muspelheim Story Book";
+    float range = 10;
+    llSensorRepeat( name, "", PASSIVE|SCRIPTED, range, PI , 3 );
+}
+
+
+default
+{
+    on_rez(integer start_param)
+    {
+        llResetScript();
+    }
+
+    state_entry()
+    {
+        llSetAlpha( 1, ALL_SIDES );
+        llSetStatus( STATUS_PHANTOM, FALSE);
+        sensorCount = 0;
+        CheckRange();
+    }
+
+    sensor( integer detected )
+    {
+        string detectedName = llDetectedName(0);
+        key bookKey = llDetectedKey(0);
+        key bookOwner = llGetOwnerKey(llDetectedKey(0));
+        llSensorRemove();
+        integer comsChannel = -1568493613;
+        llRegionSayTo(bookKey, comsChannel, "StarTranslation");
+        llSetAlpha( 0,  ALL_SIDES );
+        llSetTimerEvent(10);
+        llSetStatus( STATUS_PHANTOM, TRUE);
+    }
+    
+    no_sensor()
+    {
+        if (sensorCount > 20) llDie();
+        ++sensorCount;
+    }
+    
+    timer()
+    {
+        llDie();
+    }
+}

@@ -1,5 +1,4 @@
-Everything Created by Sara Payne is covered by the 
-
+/*
 BSD 3-Clause License
 Copyright (c) 2019, Sara Payne (Manwa Pastorelli in virtual worlds)
 All rights reserved.
@@ -23,5 +22,53 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
-There are three scripts not written by Sara Payne, covered by the licences shown in the individual scripts. 
+Error()
+{
+    llOwnerSay("This item should give you a map, please message admin to report this is missing");
+}
+
+GiveMap()
+{
+    if (llGetInventoryType("Colby Map") == INVENTORY_OBJECT)
+    {   //if the item exists deliver it
+        llGiveInventory(llGetOwner(), "Colby Map");
+    }
+    else llOwnerSay("This object is supposed to give you a map but it is missing. You will not be able to proceed without it, please contact the regions admin.");
+}
+
+default
+{
+    on_rez(integer param)
+    {   //reset the script when rezzed
+        llResetScript();
+    }
+    
+    changed(integer change)
+    {   //if changed owner reset the script
+        if (change & CHANGED_OWNER) llResetScript();
+    }
+    
+    state_entry()
+    {
+        string itemName = "Colby Map";
+        if (llGetInventoryType("Colby Map") != INVENTORY_OBJECT) Error();
+        else 
+        {   //deliver the map to the items owner
+            GiveMap();//gives the map
+            llSetTimerEvent(30); //sets a timer for 30s
+        }
+    }
+    
+    touch_start(integer any)
+    {
+        if (llDetectedKey(0) == llGetOwner()) GiveMap(); //gives the map
+        else llRegionSayTo(llDetectedKey(0), PUBLIC_CHANNEL, "Only my owner can use me, you can get your own copy somewhere around here.");//error message if anyone other than the owner touches it
+    }
+    
+    timer()
+    {
+        llDie(); //timeed out, time to die
+    }
+}

@@ -1,5 +1,4 @@
-Everything Created by Sara Payne is covered by the 
-
+/*
 BSD 3-Clause License
 Copyright (c) 2019, Sara Payne (Manwa Pastorelli in virtual worlds)
 All rights reserved.
@@ -23,5 +22,31 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
-There are three scripts not written by Sara Payne, covered by the licences shown in the individual scripts. 
+integer comsChannel = -111111;
+integer comsChannelListen;
+
+SetUpListeners()
+{   //sets up all the listeners 
+    comsChannelListen = llListen(comsChannel, "", NULL_KEY, ""); 
+    llListenControl (comsChannelListen, TRUE); 
+}//close setup listeners
+
+default
+{
+    state_entry()
+    {
+        SetUpListeners(); //sets up the listeners
+        llSetLinkAlpha(LINK_SET, 1, ALL_SIDES); //sets compas to visible
+    }
+    
+    listen(integer channel, string name, key id, string message)
+    {
+        if (channel == comsChannel && llGetOwnerKey(id) == llGetOwner())
+        {   //come here if channel and owners match
+            if (message == "HideClockClock") llSetLinkAlpha(LINK_SET, 1, ALL_SIDES); //set to invisible
+            else if (message == "ShowClock") llSetLinkAlpha(LINK_SET, 0.0, ALL_SIDES); //set to visible
+        }//close if channel and owners match
+    }//close listen 
+}

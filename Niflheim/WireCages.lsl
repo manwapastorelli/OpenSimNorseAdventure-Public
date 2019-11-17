@@ -1,5 +1,4 @@
-Everything Created by Sara Payne is covered by the 
-
+/*
 BSD 3-Clause License
 Copyright (c) 2019, Sara Payne (Manwa Pastorelli in virtual worlds)
 All rights reserved.
@@ -23,5 +22,16 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
-There are three scripts not written by Sara Payne, covered by the licences shown in the individual scripts. 
+default
+{
+    state_entry()
+    {
+        llSetLinkPrimitiveParamsFast(1, [ PRIM_OMEGA, <0.05,0,0.05>,TWO_PI,1.0]);
+        llSetLinkPrimitiveParamsFast(2, [ PRIM_OMEGA, <0,0,-.03>,1,.05]);
+        llSetLinkPrimitiveParamsFast(3, [ PRIM_OMEGA, <-0.03,0,0>,1,.05]);
+        llSetLinkPrimitiveParamsFast(4, [ PRIM_OMEGA, <0.03,0,0>,1,.05]);
+        llSetLinkPrimitiveParamsFast(5, [ PRIM_OMEGA, <0,0,0.03>,1,.05]);
+    }
+}

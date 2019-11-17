@@ -1,5 +1,4 @@
-Everything Created by Sara Payne is covered by the 
-
+/*
 BSD 3-Clause License
 Copyright (c) 2019, Sara Payne (Manwa Pastorelli in virtual worlds)
 All rights reserved.
@@ -23,5 +22,43 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
-There are three scripts not written by Sara Payne, covered by the licences shown in the individual scripts. 
+integer comsChannel = -111111;
+integer comsChannelListen;
+
+SetupListeners()
+{   //definwes listeners and turns them on or off as required
+    comsChannelListen = llListen(comsChannel, "", NULL_KEY, "");
+    llListenControl(comsChannelListen, TRUE); //turns on the coms channel listener
+}//close setup listeners
+ 
+default
+{
+    on_rez (integer parm)
+    {
+        llResetScript(); //reset the script when rezzed. 
+    }
+
+    state_entry()
+    {
+        SetupListeners();
+        string message = "SifsGoldenCap" + "," + (string)llGetOwner(); //define the message to send to loki
+        llRegionSay(comsChannel, message); //send the message 
+        llSetTimerEvent(300);//start the timer event to make sure everything is cleared up
+    }
+
+    listen( integer channel, string name, key id, string message )
+    {
+        if (channel == comsChannel && message == "Die")
+        {   //come here if the channel is the coms channel and the message is die
+            llDie();//remove item from the sim
+        }//close if message is die
+    }//close listen
+
+    timer()
+    {   //if the timer runs out remove the cap and send an error message to the user
+        llRegionSayTo(llGetOwner(), PUBLIC_CHANNEL, "Sorry timed out, please rez me again"); //send error message to the user
+        llDie();//remove from the sim
+    }//close timer
+}//close state default

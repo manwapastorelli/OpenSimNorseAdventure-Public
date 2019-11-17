@@ -1,5 +1,4 @@
-Everything Created by Sara Payne is covered by the 
-
+/*
 BSD 3-Clause License
 Copyright (c) 2019, Sara Payne (Manwa Pastorelli in virtual worlds)
 All rights reserved.
@@ -23,5 +22,43 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
-There are three scripts not written by Sara Payne, covered by the licences shown in the individual scripts. 
+integer comsChannel = -111111;
+integer comsChannelListen;
+key rezzingObject;
+
+SetUpListeners()
+{//sets the coms channel and the random menu channel then turns the listeners on.
+    comsChannelListen= llListen(comsChannel, "", NULL_KEY, "");//sets up main menu listen integer
+    llListenControl (comsChannelListen, TRUE);
+}//close set up listeners
+
+default
+{
+    on_rez(integer param)
+    {
+        llResetScript();
+    }
+
+    state_entry()
+    {
+        SetUpListeners();
+    }
+    
+    attach(key id)
+    {
+        if (id == "00000000-0000-0000-0000-000000000000")  
+        {   //item has been detached
+            llDie();
+        }
+    }
+
+    listen( integer channel, string name, key id, string message )
+    {
+        if (channel == comsChannel && message == "Detach") 
+        {
+            osForceDropAttachment();
+        }
+    }    
+}

@@ -1,5 +1,4 @@
-Everything Created by Sara Payne is covered by the 
-
+/*
 BSD 3-Clause License
 Copyright (c) 2019, Sara Payne (Manwa Pastorelli in virtual worlds)
 All rights reserved.
@@ -23,5 +22,22 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
-There are three scripts not written by Sara Payne, covered by the licences shown in the individual scripts. 
+default
+{
+    touch_start(integer any)
+    {   //a simple script to deliver one item if its in the objects inventory
+        string itemName = "Closed Scroll"; 
+        integer scrollType = llGetInventoryType(itemName);
+        if (scrollType != INVENTORY_OBJECT) 
+        {   //item is missing send an error
+            llRegionSayTo(llDetectedKey(0), PUBLIC_CHANNEL, "This item has bits missing, please let admin knkow so they can fix it. You will not be able to proceed untill this is fixed.");
+        }//close if item is missing
+        else 
+        {   //deliver the scroll and a message
+            llRegionSayTo(llDetectedKey(0), PUBLIC_CHANNEL, "When you examine the sigel a scroll falls out of the handle. Keen eyes may notice more. Use your eyes. ");//deliver message
+            llGiveInventory(llDetectedKey(0), itemName);//deliver item
+        }//close item is present
+    }
+}

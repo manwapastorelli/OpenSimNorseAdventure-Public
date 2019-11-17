@@ -1,5 +1,4 @@
-Everything Created by Sara Payne is covered by the 
-
+/*
 BSD 3-Clause License
 Copyright (c) 2019, Sara Payne (Manwa Pastorelli in virtual worlds)
 All rights reserved.
@@ -23,5 +22,40 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
-There are three scripts not written by Sara Payne, covered by the licences shown in the individual scripts. 
+list recentAvis; 
+
+default
+{
+    changed (integer change)
+    {
+        if (change & (CHANGED_REGION_RESTART | CHANGED_OWNER | CHANGED_REGION_START) ) llResetScript();
+    }
+
+    state_entry()
+    {
+        osVolumeDetect(TRUE);
+        recentAvis = [];
+    }
+    
+    collision_start(integer total_number)
+    {
+        integer detectedType = llDetectedType(0);
+        if (detectedType == 1 || detectedType == 3 || detectedType == 5)
+        {   //only process avatars, no bots or physical objects
+            key aviUUID = llDetectedKey(0);
+            if (!(~llListFindList(recentAvis, (list)aviUUID)))
+            {
+                recentAvis += aviUUID;
+                llRegionSayTo(aviUUID, PUBLIC_CHANNEL, "Have you heard how Odin learnt the runes? If not you should go see Thor in the pantheon building as you leave the bridge. There is a book there somewhere....");
+                llSetTimerEvent(120);
+            }
+        }//close if detected type is an avatar
+    }//close collissions
+
+    timer()
+    {
+        llResetScript();
+    }
+}
